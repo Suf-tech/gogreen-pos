@@ -1,0 +1,18 @@
+import { useEffect, useState } from 'react';
+import QRCode from 'qrcode';
+import { auth } from '../firebase';
+import './OwnerBilling.css';
+const API_URL=import.meta.env.VITE_API_URL||'http://localhost:5000';
+const PUBLIC_API_URL=import.meta.env.VITE_PUBLIC_API_URL||API_URL;
+const money=n=>`Rs. ${Number(n||0).toLocaleString('en-PK',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+export default function ReceiptCard({sale,business,onClose}){
+  const [token,setToken]=useState(sale.receiptToken||'');
+  const [qr,setQr]=useState('');
+  const [error,setError]=useState('');
+  const link=token&&business?.id?`${PUBLIC_API_URL.replace(/\/$/,'')}/api/public/receipts/${encodeURIComponent(business.id)}/${encodeURIComponent(sale.id)}/${token}`:'';
+  useEffect(()=>{let alive=true;if(token)return;async function ensureToken(){try{const user=auth.currentUser;if(!user)throw Error('Please login again.');const res=await fetch(`${API_URL}/api/owner/billing/receipt-link/${encodeURIComponent(sale.id)}`,{method:'POST',headers:{Authorization:`Bearer ${await user.getIdToken()}`}});const data=await res.json();if(!res.ok||!data.success)throw Error(data.message||'Could not generate link.');if(alive)setToken(data.receiptToken);}catch(e){if(alive)setError(e.message);}}ensureToken();return()=>{alive=false};},[sale.id,token]);
+  useEffect(()=>{let active=true;setQr('');if(link)QRCode.toDataURL(link,{width:260,margin:2,errorCorrectionLevel:'M'}).then(data=>{if(active)setQr(data)}).catch(()=>{if(active)setError('QR generation failed.')});return()=>{active=false}},[link]);
+  const when=sale.createdAt?new Date(sale.createdAt).toLocaleString('en-PK'):new Date().toLocaleString('en-PK');
+  const share=()=>{if(!link)return;const message=`Your digital receipt from ${business?.name||'GoGreen POS'} (${sale.receiptNumber}): ${link}`;window.open(`https://wa.me/?text=${encodeURIComponent(message)}`,'_blank','noopener,noreferrer')};
+  return <div className="pos-receipt-overlay" role="dialog" aria-modal="true"><div className="pos-receipt-card"><div className="pos-receipt-print"><h2>{business?.name||'GoGreen POS'}</h2><p>DIGITAL SALES RECEIPT</p><p>{sale.receiptNumber}</p><p>{when}</p><hr/>{sale.items?.map((item,i)=><div className="pos-receipt-line" key={i}><span>{item.name} × {item.quantity}</span><span>{money(item.lineTotal)}</span></div>)}<hr/><div className="pos-receipt-line"><span>Subtotal</span><span>{money(sale.subtotal)}</span></div><div className="pos-receipt-line"><span>Discount</span><span>{money(sale.discount)}</span></div><div className="pos-receipt-line"><strong>TOTAL</strong><strong>{money(sale.total)}</strong></div><div className="pos-receipt-line"><span>Cash</span><span>{money(sale.received)}</span></div><div className="pos-receipt-line"><span>Change</span><span>{money(sale.change)}</span></div><hr/>{qr?<><img className="pos-qr" src={qr} alt="Scan to open digital receipt"/><p>Scan QR to view your receipt online</p></>:<p>{error||'Preparing your unique QR code...'}</p>}<p>Thank you for going paperless 🌿</p></div><div className="pos-receipt-actions"><button className="pos-secondary" onClick={onClose}>Close</button><button className="pos-secondary" disabled={!link} onClick={()=>navigator.clipboard?.writeText(link)}>Copy Link</button><button className="pos-primary" disabled={!link} onClick={share}>Share on WhatsApp</button></div><div className="pos-receipt-actions"><button className="pos-secondary" onClick={()=>window.print()}>Print (Optional)</button></div>{PUBLIC_API_URL.includes('localhost')&&<p className="pos-local-warning">Phone QR scanning requires a publicly accessible deployed backend URL. localhost works only on this computer.</p>}</div></div>;
+}

@@ -1,0 +1,156 @@
+
+.login-page {
+  min-height: 100vh;
+  background: #f5f7f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 440px;
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 25px;
+  font-weight: 750;
+  color: #142e26;
+  margin-bottom: 30px;
+  letter-spacing: -1px;
+}
+
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  background: #147d52;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-size: 22px;
+}
+
+.brand-accent {
+  color: #168557;
+  margin-left: 4px;
+}
+
+.login-card {
+  background: white;
+  border: 1px solid #e5ebe7;
+  border-radius: 16px;
+  padding: 38px;
+  box-shadow: 0 14px 45px rgba(20, 50, 38, 0.05);
+}
+
+.eyebrow {
+  color: #158557;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 1.7px;
+}
+
+.login-heading h1 {
+  font-size: 29px;
+  font-weight: 750;
+  color: #18362b;
+  letter-spacing: -1px;
+  margin: 12px 0 8px;
+}
+
+.login-heading p {
+  color: #7a8880;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+.form-label {
+  color: #354a40;
+  font-size: 13px;
+  font-weight: 650;
+  margin-bottom: 8px;
+}
+
+.login-card .form-control {
+  padding: 13px 14px;
+  border-radius: 8px;
+  border: 1px solid #dce5df;
+  font-size: 14px;
+}
+
+.login-card .form-control:focus {
+  border-color: #168557;
+  box-shadow: 0 0 0 3px rgba(22, 133, 87, 0.1);
+}
+
+.helper-text {
+  color: #94a39a;
+  font-size: 12px;
+}
+
+.login-button {
+  width: 100%;
+  border: none;
+  background: #147d52;
+  color: white;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 650;
+  transition: background 0.2s;
+}
+
+.login-button:hover {
+  background: #0f6340;
+}
+
+.login-footer {
+  margin-top: 28px;
+  text-align: center;
+  color: #9ba9a0;
+  font-size: 12px;
+}
+
+.copyright {
+  margin: 26px 0 0;
+  text-align: center;
+  color: #9aa7a0;
+  font-size: 12px;
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 28px 22px;
+  }
+}
+
+.forgot-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #147d52;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+.back-link {
+  display: block;
+  margin: 20px auto 0;
+}
+
+.login-card .alert {
+  font-size: 13px;
+  border-radius: 8px;
+}
