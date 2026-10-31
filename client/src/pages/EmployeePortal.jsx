@@ -19,7 +19,7 @@ export function EmployeeLogin(){
  }catch(e){await signOut(auth).catch(()=>{});if(alive)setError(e.message)}finally{if(alive)setBusy(false)}}complete();return()=>{alive=false}},[]);
  async function send(e){e.preventDefault();setBusy(true);setError('');setMessage('');try{
   const value=email.trim().toLowerCase();
-  await sendSignInLinkToEmail(auth,value,{url:`${window.location.origin}/employee/login`,handleCodeInApp:true});
+  await sendSignInLinkToEmail(auth,value,{url: 'https://gogreen-pos.vercel.app/employee/login',handleCodeInApp:true});
   window.localStorage.setItem('gogreenEmployeeEmail',value);
   setMessage('Login link sent. Check your inbox and spam folder. Open the link to sign in.');
  }catch(e){setError(e.message)}finally{setBusy(false)}}
